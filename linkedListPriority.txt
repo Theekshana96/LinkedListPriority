@@ -1,0 +1,129 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package linkedpriority;
+
+/**
+ *
+ * @author user
+ */
+public class LinkedPriority {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        soution p=new soution();
+        p.enqueue(6, 2);
+        p.enqueue(7, 3);
+        p.enqueue(8, 4);
+        p.enqueue(5, 1);
+        p.enqueue(4, 5);
+        p.enqueue(3, 6);
+        p.dequeue();
+        p.display();
+        try{
+            p.peek();
+            System.out.println("peek is : "+p.peek());
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        
+    }
+
+}
+
+class Node {
+
+    int data;
+    int priority;
+    Node next;
+    Node prev;
+
+    public Node(int data, int priority) {
+        this.data = data;
+        this.priority = priority;
+    }
+}
+
+class soution {
+
+    Node front;
+    ///Node rear;
+
+    public soution() {
+        this.front = null;
+        //this.rear = null;
+    }
+
+    public void enqueue(int value, int priority) {
+        if (this.front == null) {
+            Node newNode = new Node(value, priority);
+            this.front = newNode;
+            return;
+        }
+
+        Node node = new Node(value, priority);
+        Node temp = this.front, previous = null;
+        while (temp != null && temp.priority <= priority) {
+            previous = temp;
+            temp = temp.next;
+        }
+
+        if (previous == null) {
+            node.next = this.front;
+            this.front.prev = node;
+            this.front = node;
+        } else if (temp == null) {
+            previous.next = node;
+            node.prev = previous;
+        } else {
+            previous.next = node;
+            node.prev = previous;
+            node.next = temp;
+            temp.prev = node;
+        }
+    }
+
+    public int dequeue() {
+        if (this.front != null) {
+            int current = this.front.data;
+            this.front = this.front.next;
+            if (this.front != null) {
+                this.front.prev = null;
+            }
+            return current;
+        }
+        return -1;
+    }
+
+    public int peek()throws Exception{
+        if (this.front == null) {
+            throw new Exception("Queue is empty cannot get peek");  
+        }
+       
+            return this.front.data;
+        
+        //return -1;
+    }
+
+    public void display() {
+
+        Node current = this.front;
+        if (this.front == null) {
+            System.out.println("List is empty.Nothing to print.");
+            return;
+        }
+        System.out.println("Nodes are: ");
+        while (current != null) {
+
+            System.out.print(current.data + " ");
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+}
